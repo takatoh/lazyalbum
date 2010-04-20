@@ -1,4 +1,4 @@
-#!C:/usr/ruby/bin/ruby.exe -Ks
+#!C:/usr/ruby/bin/ruby.exe -Ku
 #
 # LazyAlbum
 #
