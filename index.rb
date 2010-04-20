@@ -2,8 +2,6 @@
 #
 # LazyAlbum
 #
-#--
-#  $Id: index.rb 94 2009-03-18 11:27:35Z 24711 $
 
 begin
 
