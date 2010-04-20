@@ -2,8 +2,6 @@
 #
 #  PictureSender
 #
-#--
-#  $Id: ps.rb 97 2009-03-18 11:28:18Z 24711 $
 
 require 'cgi'
 $:.unshift("#{File.dirname(__FILE__)}/lib")
