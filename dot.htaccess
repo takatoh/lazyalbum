@@ -1,0 +1,13 @@
+Options +ExecCGI
+
+AddHandler cgi-script .rb
+DirectoryIndex index.rb
+
+<Files "*.rhtml">
+	deny from all
+</Files>
+
+<Files "lib/**/*.rb">
+	deny from all
+</Files>
+

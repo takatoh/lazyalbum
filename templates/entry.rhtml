@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="ja">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+  <title>Index of <%= title %></title>
+  <% if stylesheet %><link rel="stylesheet" type="text/css" href="<%= stylesheet %>"><% end %>
+</head>
+
+<body>
+
+  <div class="header"><h1><%= page_title %></h1></div>
+  <div class="pageheader"><%= breadcrumbs(entry) %></h2></div>
+
+  <div class="pagebody">
+
+  <% unless sub_entries.empty? %>
+    <h2>Sub-Entries</h2>
+    <ul>
+      <% sub_entries.each do |ent| %>
+      <li><a href="<%= cgi_url %>?e=<%= CGI.escape(ent[:entry]) %>"><%= ent[:title] %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% unless items.empty? %>
+  <h2>Pictures</h2>
+  <ul class="photoList">
+  <% items.each do |i| %>
+  <li class="photoBox">
+    <a href="<%= url_to_picture_page(entry, i) %>">
+      <img src="<%= url_to_thumbnail(entry, i) %>">
+    </a><br/>
+    <%= i %>
+  </li>
+  <% end %>
+  </ul>
+  <% end %>
+
+  </div>
+
+</body>
+
+</html>

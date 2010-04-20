@@ -1,0 +1,113 @@
+body {
+  margin: 0;
+  background-color: ivory;
+  font-family: Verdana,sans-serif;
+}
+
+div.header {
+  padding-top: 0.2em;
+  padding-left: 7%;
+  padding-right: 7%;
+  border-bottom: solid thin;
+  background-color: #99cc99;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+div.pageheader {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left: 7%;
+  padding-right: 7%;
+  border-top: none;
+  border-bottom: solid thin;
+  background-color: #aaddaa;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+div.pagecomment {
+  margin-left: 2%;
+  font-size: small;
+}
+
+div.pagebody {
+  margin-left: 7%;
+  margin-right: 7%;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+div.pagefooter {
+  margin-left: 5%;
+  margin-right: 5%;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+div.pagenavi {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: small;
+}
+
+ul {
+  list-style: none;
+}
+
+
+tr.tableheader {
+  background-color: #aaddaa;
+}
+
+tr.even {
+  background-color: #ddffdd;
+}
+
+tr.odd {
+  background-color: ivory;
+}
+
+td {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.center {
+  text-align: center;
+}
+
+
+
+ul.photoList {
+  list-style-type: none;
+}
+
+ul.photoList li.photoBox {
+  float: left;
+  width: 170px;
+  height: 200px;
+  text-align: center;
+  font-size: small;
+}
+
+ul.photoList li.photoBox a {
+  text-align: center;
+}
+
+ul.photoList li.photoBox a img {
+  border: solid 1px #000000;
+}
+
+ul.photoList li.photoBox h3 {
+  margin-top: 0px;
+}
+

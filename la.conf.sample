@@ -1,0 +1,4 @@
+page_title: LazyAlbum
+cgi_url: http://exsample.com/la/index.rb
+data_dir: C:/home/la
+stylesheet: default.css
