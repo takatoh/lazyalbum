@@ -2,8 +2,6 @@
 #
 # make_thumbnail.rb
 #
-#--
-#  $Id: make_thumbnail.rb 96 2009-03-18 11:28:05Z 24711 $
 
 require 'rubygems'
 require 'rmagick'
