@@ -59,7 +59,7 @@ class LazyAlbumApp < Sinatra::Base
     @config = LazyAlbum::Config.instance
     path = params[:splat][0].split('/')
     entry = path[0..-2].join('/')
-    thumbnail = path.last
+    thumbnail = "tn_" + path.last
     send_file "#{@config.data_dir}/#{entry}/.thumbnail/#{thumbnail}"
   end
 
