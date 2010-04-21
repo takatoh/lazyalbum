@@ -21,7 +21,7 @@ class LazyAlbumApp < Sinatra::Base
     alias_method :h, :escape_html
   end
 
-#  include LazyAlbum::HTMLHelper
+  include LazyAlbum::HTMLHelper
 
 
   set :run, true
@@ -33,12 +33,13 @@ class LazyAlbumApp < Sinatra::Base
 
 
   ## Config
-  config = LazyAlbum::Config.instance
-  page_title = config.page_title
-  cgi_url = config.cgi_url
-  data_dir = config.data_dir
-  ps_url = cgi_url.sub("index.rb", "ps.rb")
-  stylesheet = config.stylesheet
+  @config = LazyAlbum::Config.instance
+#  @page_title = @config.page_title
+#  @page_title = "LazyAlbum"
+  @cgi_url = @config.cgi_url
+  @data_dir = @config.data_dir
+  @ps_url = @cgi_url.sub("index.rb", "ps.rb")
+  @stylesheet = @config.stylesheet
 
   ## Methods
   def out(template, bind)
@@ -53,6 +54,8 @@ class LazyAlbumApp < Sinatra::Base
 
 
   get '/' do
+    @config = LazyAlbum::Config.instance
+    @page_title = @config.page_title
     @ents = LazyAlbum::Entries.new.serch
     @items = @ents.to_array
     @items.sort!{|a, b| a[:title] <=> b[:title] }

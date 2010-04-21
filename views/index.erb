@@ -5,20 +5,20 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
-  <title>Index - <%= page_title %></title>
-  <% if stylesheet %><link rel="stylesheet" type="text/css" href="<%= stylesheet %>"><% end %>
+  <title>Index - <%= @config.page_title %></title>
+  <% if @config.stylesheet %><link rel="stylesheet" type="text/css" href="<%= @config.stylesheet %>"><% end %>
 </head>
 
 <body>
 
-  <div class="header"><h1><%= page_title %></h1></div>
+  <div class="header"><h1><%= @config.page_title %></h1></div>
 
-  <div class="pageheader"><a href="<%= cgi_url %>">Index</a></div>
+  <div class="pageheader"><a href="<%= @config.cgi_url %>">Index</a></div>
 
   <div class="pagebody">
     <table align="center">
       <tr class="tableheader"><th width="50">No.</th><th width="500">Title</th></tr>
-      <% items.each_with_index do |itm, idx| %>
+      <% @items.each_with_index do |itm, idx| %>
       <tr class="<%= odd_or_even(idx + 1) %>"><td class="center"><%= idx + 1 %></td>
           <td><a href="<%= url_to_entry(itm[:entry]) %>"><%= itm[:title] %></a></td></tr>
       <% end %>
