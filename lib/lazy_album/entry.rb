@@ -14,7 +14,7 @@ require 'rmagick'
 module LazyAlbum
 
     # 画像として扱うファイルの拡張子の配列。
-    PICTURE_EXT = ['.jpg', '.jpeg' '.bmp', '.pcx', '.png', '.gif']
+    PICTURE_EXT = ['.jpg', '.jpeg', '.bmp', '.pcx', '.png', '.gif']
 
     # データファイルの名前。
     DATAFILE = '.index.yaml'
