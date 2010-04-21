@@ -54,6 +54,15 @@ class LazyAlbumApp < Sinatra::Base
     erb :index
   end
 
+  # Send thumbnail
+  get '/images/*.thumbnail' do
+    @config = LazyAlbum::Config.instance
+    path = params[:splat][0].split('/')
+    entry = path[0..-2].join('/')
+    thumbnail = path.last
+    send_file "#{@config.data_dir}/#{entry}/.thumbnail/#{thumbnail}"
+  end
+
   # Send picture
   get '/images/*' do
     @config = LazyAlbum::Config.instance
