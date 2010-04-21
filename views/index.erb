@@ -6,14 +6,14 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
   <title>Index - <%= @config.page_title %></title>
-  <% if @config.stylesheet %><link rel="stylesheet" type="text/css" href="<%= @config.stylesheet %>"><% end %>
+  <% if @config.stylesheet %><link rel="stylesheet" type="text/css" href="/css/<%= @config.stylesheet %>"><% end %>
 </head>
 
 <body>
 
   <div class="header"><h1><%= @config.page_title %></h1></div>
 
-  <div class="pageheader"><a href="<%= @config.cgi_url %>">Index</a></div>
+  <div class="pageheader"><a href="/">Index</a></div>
 
   <div class="pagebody">
     <table align="center">

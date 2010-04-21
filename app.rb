@@ -32,15 +32,6 @@ class LazyAlbumApp < Sinatra::Base
   enable :sessions
 
 
-  ## Config
-  @config = LazyAlbum::Config.instance
-#  @page_title = @config.page_title
-#  @page_title = "LazyAlbum"
-  @cgi_url = @config.cgi_url
-  @data_dir = @config.data_dir
-  @ps_url = @cgi_url.sub("index.rb", "ps.rb")
-  @stylesheet = @config.stylesheet
-
   ## Methods
   def out(template, bind)
     print "Content-type: text/html\n\n"
