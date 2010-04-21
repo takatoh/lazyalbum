@@ -44,6 +44,7 @@ class LazyAlbumApp < Sinatra::Base
   end
 
 
+  # Index
   get '/' do
     @config = LazyAlbum::Config.instance
     @page_title = @config.page_title
@@ -51,6 +52,12 @@ class LazyAlbumApp < Sinatra::Base
     @items = @ents.to_array
     @items.sort!{|a, b| a[:title] <=> b[:title] }
     erb :index
+  end
+
+  # Picture
+  get '/images/*' do
+    @config = LazyAlbum::Config.instance
+    send_file "#{@config.data_dir}/#{params[:splat][0]}"
   end
 
 
