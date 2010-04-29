@@ -31,10 +31,10 @@ module LazyAlbum
     # •¶š—ñ‚Æˆê’v‚·‚é‚©”Û‚©‚Å”»’è‚·‚éB
     def picture?(file)
       x = false
-      if File.file?(file)
+#      if File.file?(file)
         ext = /\.[^\.]*$/is.match(file).to_s.downcase
         x = PICTURE_EXT.member?(ext)
-      end
+#      end
       x
     end
     module_function :picture?

@@ -70,11 +70,34 @@ class LazyAlbumApp < Sinatra::Base
   end
 
   # Picture
-  get '/*/*.bmp' do
+  get '/*' do
+    @config = LazyAlbum::Config.instance
+    pathes = (params[:splat][0]).split("/")
+    @picture = pathes[-1]
+    pass unless LazyAlbum.picture?(@picture)
+    @entry = pathes[0..-2].join("/")
+    erb :picture
+  end
+
+  # Entry
+  get '/*' do
     @config = LazyAlbum::Config.instance
     @entry = params[:splat][0]
-    @picture = params[:splat][1] + ".bmp"
-    erb :picture
+
+    @ent = LazyAlbum::Entry.new(@entry)
+    begin
+      @ent.read
+    rescue LazyAlbum::NoDataFileError
+    end
+    @title = @ent.title || "(no title)"
+    @items = @ent.pictures
+
+    @ent.search
+    @sub_entries = @ent.sub_entries.to_array
+    @sub_entries.sort!{|a, b| a[:title] <=> b[:title] }
+    @ent.make_thumbnail_all
+
+    erb :entry
   end
 
 

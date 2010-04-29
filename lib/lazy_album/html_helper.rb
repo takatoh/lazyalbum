@@ -16,8 +16,7 @@ module LazyAlbum
     end
 
     def url_to_picture_page(entry_path, picture)
-      config = Config.instance
-      "#{config.cgi_url}?e=#{CGI.escape(entry_path)};p=#{CGI.escape(picture)}"
+      "/#{CGI.escape(entry_path)}/#{CGI.escape(picture)}"
     end
 
     def url_to_picture(entry_path, picture)
@@ -27,9 +26,7 @@ module LazyAlbum
     end
 
     def url_to_thumbnail(entry_path, picture)
-      config = Config.instance
-      ps = config.cgi_url.sub("index.rb", "ps.rb")
-      "#{ps}?e=#{CGI.escape(entry_path)};p=#{CGI.escape(picture)};t=thumbnail"
+      "/images/#{CGI.escape(entry_path)}/#{CGI.escape(picture)}.thumbnail"
     end
 
     def breadcrumbs(entry_path)
