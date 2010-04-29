@@ -20,7 +20,7 @@
     <h2>Sub-Entries</h2>
     <ul>
       <% @sub_entries.each do |ent| %>
-      <li><a href="<%= cgi_url %>?e=<%= CGI.escape(@ent[:entry]) %>"><%= @ent[:title] %></a></li>
+      <li><a href="<%= url_to_entry(ent[:entry]) %>"><%= ent[:title] %></a></li>
       <% end %>
     </ul>
   <% end %>

@@ -33,12 +33,6 @@ class LazyAlbumApp < Sinatra::Base
 
 
   ## Methods
-  def out(template, bind)
-    print "Content-type: text/html\n\n"
-    script = ERB.new(File.read(template), nil, "%>")
-    script.run(bind)
-  end
-
   def odd_or_even(n)
     ["even", "odd"][n % 2]
   end
@@ -82,7 +76,7 @@ class LazyAlbumApp < Sinatra::Base
   # Entry
   get '/*' do
     @config = LazyAlbum::Config.instance
-    @entry = params[:splat][0]
+    @entry = params[:splat][0].sub(/\A\//, "")
 
     @ent = LazyAlbum::Entry.new(@entry)
     begin
@@ -99,36 +93,5 @@ class LazyAlbumApp < Sinatra::Base
 
     erb :entry
   end
-
-
-#  ## Main
-#if cgi.include?('e')
-#  entry = cgi.params['e'][0]
-#  ent = LazyAlbum::Entry.new(entry)
-#  begin
-#    ent.read
-#  rescue LazyAlbum::NoDataFileError
-#  end
-#  title = ent.title || "(no title)"
-#  items = ent.pictures
-#end
-#if cgi.include?('p')
-#  picture = cgi.params['p'][0]
-#end
-#
-#if entry && picture
-#  out("templates/picture.rhtml", binding)
-#elsif entry
-#  ent.search
-#  sub_entries = ent.sub_entries.to_array
-#  sub_entries.sort!{|a, b| a[:title] <=> b[:title] }
-#  ent.make_thumbnail_all
-#  out("templates/entry.rhtml", binding)
-#else
-#  ents = LazyAlbum::Entries.new.serch
-#  items = ents.to_array
-#  items.sort!{|a, b| a[:title] <=> b[:title] }
-#  out("templates/index.rhtml", binding)
-#end
 
 end
