@@ -9,9 +9,6 @@ require 'erb'
 
 $:.unshift("#{File.dirname(__FILE__)}/lib")
 require 'lazy_album'
-require 'lazy_album/config'
-require 'lazy_album/entry'
-require 'lazy_album/html_helper'
 
 
 class LazyAlbumApp < Sinatra::Base
