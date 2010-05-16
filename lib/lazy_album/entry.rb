@@ -1,9 +1,6 @@
-#!ruby -Ks
 #
-# LazyAlbum �̉摜�f�B���N�g�����������߂̃��C�u�����B
+# LazyAlbum の画像ディレクトリを扱うためのライブラリ。
 #
-#--
-#  $Id: entry.rb 77 2009-03-17 06:35:27Z 24711 $
 
 require 'find'
 require 'jcode'
@@ -13,22 +10,22 @@ require 'rmagick'
 
 module LazyAlbum
 
-    # �摜�Ƃ��Ĉ����t�@�C���̊g���q�̔z��B
+    # 画像として扱うファイルの拡張子の配列。
     PICTURE_EXT = ['.jpg', '.jpeg', '.bmp', '.pcx', '.png', '.gif']
 
-    # �f�[�^�t�@�C���̖��O�B
+    # データファイルの名前。
     DATAFILE = '.index.yaml'
 
-    # �T���l�[���p�f�B���N�g�����B
+    # サムネール用ディレクトリ名。
     THUMB_DIR_NAME = '.thumbnail'
 
-    # �f�[�^�t�@�C�����Ȃ�
+    # データファイルがない
     class NoDataFileError < StandardError; end
 
 
-    # file ���摜�t�@�C���ł���ΐ^��Ԃ��B
-    # �摜�t�@�C�����ۂ��́C�g���q�� LazyAlbum::PICTURE_EXT �ɋ������Ă���
-    # ������ƈ�v���邩�ۂ��Ŕ��肷��B
+    # file が画像ファイルであれば真を返す。
+    # 画像ファイルか否かは，拡張子が LazyAlbum::PICTURE_EXT に挙げられている
+    # 文字列と一致するか否かで判定する。
     def picture?(file)
       x = false
 #      if File.file?(file)
@@ -39,7 +36,7 @@ module LazyAlbum
     end
     module_function :picture?
 
-    # path �̒����ɉ摜�t�@�C��������ΐ^��Ԃ��B
+    # path の直下に画像ファイルがあれば真を返す。
     def picture_exist?(path)
       path = File.expand_path(path)
       files = Dir.entries(path).collect{|f| File.join(path, f)}
@@ -54,8 +51,8 @@ module LazyAlbum
     end
     module_function :picture_exist?
 
-    # file ���f�[�^�t�@�C���t�@�C���ł���ΐ^��Ԃ��B
-    # �f�[�^�t�@�C�����ۂ��́C���O�� LazyAlbum::DATAFILE �ƈ�v���邩�ۂ��Ŕ��肷��B
+    # file がデータファイルファイルであれば真を返す。
+    # データファイルか否かは，名前が LazyAlbum::DATAFILE と一致するか否かで判定する。
     def datafile?(file)
       if File.file?(file)
         DATAFILE == File.basename(file).downcase
@@ -65,15 +62,15 @@ module LazyAlbum
     end
     module_function :datafile?
 
-    # path �̒����Ƀf�[�^�t�@�C��������ΐ^��Ԃ��B
+    # path の直下にデータファイルがあれば真を返す。
     def datafile_exist?(path)
       files = Dir.entries(path).delete_if{|f| !File.file?(File.join(path, f))}
       files.member?(DATAFILE)
     end
     module_function :datafile_exist?
 
-    # path �̒����Ƀf�[�^�t�@�C��������΂��̃t�@�C������Ԃ��B
-    # �f�[�^�t�@�C�����Ȃ���΁Cnil ��Ԃ��B
+    # path の直下にデータファイルがあればそのファイル名を返す。
+    # データファイルがなければ，nil を返す。
     def datafile(path)
       datafilename = File.join(path, DATAFILE)
       if File.exists?(datafilename)
@@ -92,7 +89,7 @@ module LazyAlbum
 
     class Entry
 
-      # LazyAlbum::Entry�I�u�W�F�N�g�𐶐�����B
+      # LazyAlbum::Entryオブジェクトを生成する。
       def initialize(entry_path)
         @config = Config.instance
         @base_path = File.expand_path(@config.data_dir)
@@ -110,10 +107,10 @@ module LazyAlbum
       attr_accessor :data
       attr_reader   :sub_entries
 
-      # �f�[�^�t�@�C���������ǂݍ��݁C���g��Ԃ��B
+      # データファイルから情報を読み込み，自身を返す。
       def read
         datafilename = LazyAlbum.datafile(@path)
-        raise NoDataFileError unless datafilename   # �f�[�^�t�@�C�����Ȃ���Η�O����
+        raise NoDataFileError unless datafilename   # データファイルがなければ例外発生
         @data = YAML.load_file(datafilename)
         @attributes = @data["attributes"]
         @title = @attributes["title"]
@@ -121,13 +118,13 @@ module LazyAlbum
         self
       end
 
-      # @path �ȉ��̃f�B���N�g�����������A�G���g����ǉ�����B
-      # ���g��Ԃ��B
+      # @path 以下のディレクトリを検索し、エントリを追加する。
+      # 自身を返す。
       def search
         @sub_entries = LazyAlbum::Entries.new(@entry_path).serch
       end
 
-      # �G���g���Ɋ܂܂��摜�t�@�C�����̔z���Ԃ��B
+      # エントリに含まれる画像ファイル名の配列を返す。
       def pictures
         files = Dir.glob("#{@path}/*")
         files = files.delete_if{|f| !LazyAlbum.picture?(f)}
@@ -135,14 +132,14 @@ module LazyAlbum
         files
       end
 
-      # �T���l�C���f�B���N�g�������B
+      # サムネイルディレクトリを作る。
       def make_thumb_dir
         thumb_dir = File.join(@path, THUMB_DIR_NAME)
         Dir.mkdir(thumb_dir)
         thumb_dir
       end
 
-      # �T���l�C�������B
+      # サムネイルを作る。
       def make_thumbnail_all
         thumb_dir = File.join(@path, THUMB_DIR_NAME)
         make_thumb_dir unless File.exist?(thumb_dir)
@@ -164,7 +161,7 @@ module LazyAlbum
 
     class Entries
 
-      # LazyAlbum::Entries�I�u�W�F�N�g�𐶐�����B@base_path �ȊO�͋�B
+      # LazyAlbum::Entriesオブジェクトを生成する。@base_path 以外は空。
       def initialize(entry_path = "")
         @config = Config.instance
         @base_path = File.expand_path(@config.data_dir)
@@ -175,16 +172,16 @@ module LazyAlbum
 
       attr_reader :base_path, :entry_path
 
-      # @base_path �ȉ��̃f�B���N�g�����������A�G���g����ǉ�����B
-      # ���g��Ԃ��B
+      # @base_path 以下のディレクトリを検索し、エントリを追加する。
+      # 自身を返す。
       def serch
         Dir.glob(File.join(@path, "*")) do |f|
           next if /^\./ =~ File.basename(f)
-          # �摜�t�@�C���݂̍�f�B���N�g����ΏۂƂ���B
+          # 画像ファイルの在るディレクトリを対象とする。
 #          if File.directory?(f) and LazyAlbum.picture_exist?(f)
           if File.directory?(f)
             entry = LazyAlbum::Entry.new(File.join(@entry_path, File.basename(f)))
-            # �����f�[�^�t�@�C�����݂�΁C�����ǂݍ��ށB
+            # もしデータファイルが在れば，それを読み込む。
             entry.read if LazyAlbum.datafile_exist?(f)
             @entries << entry
           end
@@ -192,11 +189,11 @@ module LazyAlbum
         self
       end
 
-      # entry�iLazyAlbum::Entry�I�u�W�F�N�g�j��ǉ�����B
+      # entry（LazyAlbum::Entryオブジェクト）を追加する。
       def add(entry); @entries << entry; end
       alias :<< :add
 
-      # �e�G���g���ɑ΂��ău���b�N���J��Ԃ��C�e���[�^�B
+      # 各エントリに対してブロックを繰り返すイテレータ。
       def each(&block)
         @entries.each do |entry|
           yield(entry) if block_given?
@@ -212,7 +209,7 @@ module LazyAlbum
         end
       end
 
-      # �G���g�����Ȃ���ΐ^��Ԃ��B
+      # エントリがなければ真を返す。
       def empty?
         @entries.empty?
       end
