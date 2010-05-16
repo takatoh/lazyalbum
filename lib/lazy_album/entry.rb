@@ -130,7 +130,7 @@ module LazyAlbum
 
       # エントリに含まれる画像ファイル名の配列を返す。
       def pictures
-        files = Dir.glob("#{@path}/*")
+        files = Dir.glob("#{conv_to_filesystem_encoding(@path)}/*")
         files = files.delete_if{|f| !LazyAlbum.picture?(f)}
         files = files.collect{|f| File.basename(f)}
         files
@@ -138,20 +138,20 @@ module LazyAlbum
 
       # サムネイルディレクトリを作る。
       def make_thumb_dir
-        thumb_dir = File.join(@path, THUMB_DIR_NAME)
+        thumb_dir = conv_to_filesystem_encoding(File.join(@path, THUMB_DIR_NAME))
         Dir.mkdir(thumb_dir)
         thumb_dir
       end
 
       # サムネイルを作る。
       def make_thumbnail_all
-        thumb_dir = File.join(@path, THUMB_DIR_NAME)
+        thumb_dir = conv_to_filesystem_encoding(File.join(@path, THUMB_DIR_NAME))
         make_thumb_dir unless File.exist?(thumb_dir)
         pictures.each do |pic|
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
             geometry = Magick::Geometry.from_s("150x150")
-            img = Magick::Image.read("#{@path}/#{pic}").first
+            img = Magick::Image.read("#{conv_to_filesystem_encoding(@path)}/#{pic}").first
             thumbnail = img.change_geometry(geometry) do |cols, rows, i|
               i.resize!(cols, rows)
             end
