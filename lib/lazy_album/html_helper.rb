@@ -32,7 +32,7 @@ module LazyAlbum
       path_ary = inits(ent_ary).map{|a| a.join("/")}
       path_ary.zip(ent_ary).map do |e|
         "<a href=" + url_to_entry(e[0]) + ">" + e[1] + "</a>"
-      end.unshift("<a href=\"/\">Index</a>").join(" > ")
+      end.unshift("<a href=\"/\">Index</a>").join(" &#187; ")
     end
 
 
