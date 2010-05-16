@@ -16,6 +16,7 @@ class LazyAlbumApp < Sinatra::Base
   helpers do
     include Rack::Utils
     alias_method :h, :escape_html
+    include LazyAlbum::Utils
   end
 
   include LazyAlbum::HTMLHelper
@@ -49,7 +50,7 @@ class LazyAlbumApp < Sinatra::Base
   get '/images/*.thumbnail' do
     @config = LazyAlbum::Config.instance
     path = params[:splat][0].split('/')
-    entry = path[0..-2].join('/')
+    entry = conv_to_filesystem_encoding(path[0..-2].join('/'))
     thumbnail = "tn_" + path.last
     send_file "#{@config.data_dir}/#{entry}/.thumbnail/#{thumbnail}"
   end
@@ -57,13 +58,14 @@ class LazyAlbumApp < Sinatra::Base
   # Send picture
   get '/images/*' do
     @config = LazyAlbum::Config.instance
-    send_file "#{@config.data_dir}/#{params[:splat][0]}"
+    path = conv_to_filesystem_encoding(params[:splat][0])
+    send_file "#{@config.data_dir}/#{path}"
   end
 
   # Picture
   get '/*' do
     @config = LazyAlbum::Config.instance
-    pathes = (params[:splat][0]).split("/")
+    pathes = params[:splat][0].split("/")
     @picture = pathes[-1]
     pass unless LazyAlbum.picture?(@picture)
     @entry = pathes[0..-2].join("/")

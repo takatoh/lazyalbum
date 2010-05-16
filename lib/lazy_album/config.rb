@@ -1,8 +1,6 @@
 #
 # LazyAlbum::Config
 #
-#--
-#  $Id: config.rb 109 2009-10-16 10:04:32Z 24711 $
 
 require 'inputfileparser'
 require 'singleton'
@@ -14,7 +12,7 @@ module LazyAlbum
 
     CONFIG_FILE_NAME = "la.conf"
 
-    KEYS = %w( cgi_url data_dir stylesheet page_title convert_command )
+    KEYS = %w( data_dir stylesheet page_title file_system_encoding )
 
     KEYS.each{|k| attr_reader k.intern}
 

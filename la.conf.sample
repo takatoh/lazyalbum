@@ -1,3 +1,4 @@
 page_title: LazyAlbum
 data_dir: ./data
 stylesheet: default.css
+file_system_encoding: Shift_JIS

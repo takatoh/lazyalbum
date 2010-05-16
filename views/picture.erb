@@ -4,7 +4,7 @@
 <html lang="ja">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Picture</title>
   <% if @config.stylesheet %><link rel="stylesheet" type="text/css" href="/css/<%= @config.stylesheet %>"><% end %>
 </head>
@@ -15,7 +15,7 @@
   <div class="pageheader"><%= breadcrumbs(@entry) %></h2></div>
   <div class="pagebody">
     <h3>Picture: <%= @picture %></h3>
-    <img id="main_picture" src="/images/<%= @entry %>/<%= @picture %>">
+    <img id="main_picture" src="<%= url_to_picture(@entry, @picture) %>">
   </div>
 
 </body>

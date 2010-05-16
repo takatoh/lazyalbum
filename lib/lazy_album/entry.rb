@@ -1,9 +1,6 @@
-#!ruby -Ks
 #
-# LazyAlbum ‚Ì‰æ‘œƒfƒBƒŒƒNƒgƒŠ‚ğˆµ‚¤‚½‚ß‚Ìƒ‰ƒCƒuƒ‰ƒŠB
+# LazyAlbum ã®ç”»åƒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æ‰±ã†ãŸã‚ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã€‚
 #
-#--
-#  $Id: entry.rb 77 2009-03-17 06:35:27Z 24711 $
 
 require 'find'
 require 'jcode'
@@ -11,24 +8,26 @@ require 'yaml'
 require 'rubygems'
 require 'rmagick'
 
+require 'lazy_album/utils'
+
 module LazyAlbum
 
-    # ‰æ‘œ‚Æ‚µ‚Äˆµ‚¤ƒtƒ@ƒCƒ‹‚ÌŠg’£q‚Ì”z—ñB
+    # ç”»åƒã¨ã—ã¦æ‰±ã†ãƒ•ã‚¡ã‚¤ãƒ«ã®æ‹¡å¼µå­ã®é…åˆ—ã€‚
     PICTURE_EXT = ['.jpg', '.jpeg', '.bmp', '.pcx', '.png', '.gif']
 
-    # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ì–¼‘OB
+    # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰ã€‚
     DATAFILE = '.index.yaml'
 
-    # ƒTƒ€ƒl[ƒ‹—pƒfƒBƒŒƒNƒgƒŠ–¼B
+    # ã‚µãƒ ãƒãƒ¼ãƒ«ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªåã€‚
     THUMB_DIR_NAME = '.thumbnail'
 
-    # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª‚È‚¢
+    # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã„
     class NoDataFileError < StandardError; end
 
 
-    # file ‚ª‰æ‘œƒtƒ@ƒCƒ‹‚Å‚ ‚ê‚Î^‚ğ•Ô‚·B
-    # ‰æ‘œƒtƒ@ƒCƒ‹‚©”Û‚©‚ÍCŠg’£q‚ª LazyAlbum::PICTURE_EXT ‚É‹“‚°‚ç‚ê‚Ä‚¢‚é
-    # •¶š—ñ‚Æˆê’v‚·‚é‚©”Û‚©‚Å”»’è‚·‚éB
+    # file ãŒç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚Œã°çœŸã‚’è¿”ã™ã€‚
+    # ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã‹å¦ã‹ã¯ï¼Œæ‹¡å¼µå­ãŒ LazyAlbum::PICTURE_EXT ã«æŒ™ã’ã‚‰ã‚Œã¦ã„ã‚‹
+    # æ–‡å­—åˆ—ã¨ä¸€è‡´ã™ã‚‹ã‹å¦ã‹ã§åˆ¤å®šã™ã‚‹ã€‚
     def picture?(file)
       x = false
 #      if File.file?(file)
@@ -39,7 +38,7 @@ module LazyAlbum
     end
     module_function :picture?
 
-    # path ‚Ì’¼‰º‚É‰æ‘œƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚Î^‚ğ•Ô‚·B
+    # path ã®ç›´ä¸‹ã«ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°çœŸã‚’è¿”ã™ã€‚
     def picture_exist?(path)
       path = File.expand_path(path)
       files = Dir.entries(path).collect{|f| File.join(path, f)}
@@ -54,8 +53,8 @@ module LazyAlbum
     end
     module_function :picture_exist?
 
-    # file ‚ªƒf[ƒ^ƒtƒ@ƒCƒ‹ƒtƒ@ƒCƒ‹‚Å‚ ‚ê‚Î^‚ğ•Ô‚·B
-    # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚©”Û‚©‚ÍC–¼‘O‚ª LazyAlbum::DATAFILE ‚Æˆê’v‚·‚é‚©”Û‚©‚Å”»’è‚·‚éB
+    # file ãŒãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚Œã°çœŸã‚’è¿”ã™ã€‚
+    # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã‹å¦ã‹ã¯ï¼Œåå‰ãŒ LazyAlbum::DATAFILE ã¨ä¸€è‡´ã™ã‚‹ã‹å¦ã‹ã§åˆ¤å®šã™ã‚‹ã€‚
     def datafile?(file)
       if File.file?(file)
         DATAFILE == File.basename(file).downcase
@@ -65,15 +64,15 @@ module LazyAlbum
     end
     module_function :datafile?
 
-    # path ‚Ì’¼‰º‚Éƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚Î^‚ğ•Ô‚·B
+    # path ã®ç›´ä¸‹ã«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°çœŸã‚’è¿”ã™ã€‚
     def datafile_exist?(path)
       files = Dir.entries(path).delete_if{|f| !File.file?(File.join(path, f))}
       files.member?(DATAFILE)
     end
     module_function :datafile_exist?
 
-    # path ‚Ì’¼‰º‚Éƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚Î‚»‚Ìƒtƒ@ƒCƒ‹–¼‚ğ•Ô‚·B
-    # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª‚È‚¯‚ê‚ÎCnil ‚ğ•Ô‚·B
+    # path ã®ç›´ä¸‹ã«ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°ãã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¿”ã™ã€‚
+    # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‘ã‚Œã°ï¼Œnil ã‚’è¿”ã™ã€‚
     def datafile(path)
       datafilename = File.join(path, DATAFILE)
       if File.exists?(datafilename)
@@ -92,7 +91,9 @@ module LazyAlbum
 
     class Entry
 
-      # LazyAlbum::EntryƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éB
+      include LazyAlbum::Utils
+
+      # LazyAlbum::Entryã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹ã€‚
       def initialize(entry_path)
         @config = Config.instance
         @base_path = File.expand_path(@config.data_dir)
@@ -110,10 +111,10 @@ module LazyAlbum
       attr_accessor :data
       attr_reader   :sub_entries
 
-      # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚©‚çî•ñ‚ğ“Ç‚İ‚İC©g‚ğ•Ô‚·B
+      # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰æƒ…å ±ã‚’èª­ã¿è¾¼ã¿ï¼Œè‡ªèº«ã‚’è¿”ã™ã€‚
       def read
         datafilename = LazyAlbum.datafile(@path)
-        raise NoDataFileError unless datafilename   # ƒf[ƒ^ƒtƒ@ƒCƒ‹‚ª‚È‚¯‚ê‚Î—áŠO”­¶
+        raise NoDataFileError unless datafilename   # ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒãªã‘ã‚Œã°ä¾‹å¤–ç™ºç”Ÿ
         @data = YAML.load_file(datafilename)
         @attributes = @data["attributes"]
         @title = @attributes["title"]
@@ -121,36 +122,36 @@ module LazyAlbum
         self
       end
 
-      # @path ˆÈ‰º‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğŒŸõ‚µAƒGƒ“ƒgƒŠ‚ğ’Ç‰Á‚·‚éB
-      # ©g‚ğ•Ô‚·B
+      # @path ä»¥ä¸‹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æ¤œç´¢ã—ã€ã‚¨ãƒ³ãƒˆãƒªã‚’è¿½åŠ ã™ã‚‹ã€‚
+      # è‡ªèº«ã‚’è¿”ã™ã€‚
       def search
         @sub_entries = LazyAlbum::Entries.new(@entry_path).serch
       end
 
-      # ƒGƒ“ƒgƒŠ‚ÉŠÜ‚Ü‚ê‚é‰æ‘œƒtƒ@ƒCƒ‹–¼‚Ì”z—ñ‚ğ•Ô‚·B
+      # ã‚¨ãƒ³ãƒˆãƒªã«å«ã¾ã‚Œã‚‹ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«åã®é…åˆ—ã‚’è¿”ã™ã€‚
       def pictures
-        files = Dir.glob("#{@path}/*")
+        files = Dir.glob("#{conv_to_filesystem_encoding(@path)}/*")
         files = files.delete_if{|f| !LazyAlbum.picture?(f)}
         files = files.collect{|f| File.basename(f)}
         files
       end
 
-      # ƒTƒ€ƒlƒCƒ‹ƒfƒBƒŒƒNƒgƒŠ‚ğì‚éB
+      # ã‚µãƒ ãƒã‚¤ãƒ«ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œã‚‹ã€‚
       def make_thumb_dir
-        thumb_dir = File.join(@path, THUMB_DIR_NAME)
+        thumb_dir = conv_to_filesystem_encoding(File.join(@path, THUMB_DIR_NAME))
         Dir.mkdir(thumb_dir)
         thumb_dir
       end
 
-      # ƒTƒ€ƒlƒCƒ‹‚ğì‚éB
+      # ã‚µãƒ ãƒã‚¤ãƒ«ã‚’ä½œã‚‹ã€‚
       def make_thumbnail_all
-        thumb_dir = File.join(@path, THUMB_DIR_NAME)
+        thumb_dir = conv_to_filesystem_encoding(File.join(@path, THUMB_DIR_NAME))
         make_thumb_dir unless File.exist?(thumb_dir)
         pictures.each do |pic|
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
             geometry = Magick::Geometry.from_s("150x150")
-            img = Magick::Image.read("#{@path}/#{pic}").first
+            img = Magick::Image.read("#{conv_to_filesystem_encoding(@path)}/#{pic}").first
             thumbnail = img.change_geometry(geometry) do |cols, rows, i|
               i.resize!(cols, rows)
             end
@@ -164,7 +165,9 @@ module LazyAlbum
 
     class Entries
 
-      # LazyAlbum::EntriesƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éB@base_path ˆÈŠO‚Í‹óB
+      include LazyAlbum::Utils
+
+      # LazyAlbum::Entriesã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹ã€‚@base_path ä»¥å¤–ã¯ç©ºã€‚
       def initialize(entry_path = "")
         @config = Config.instance
         @base_path = File.expand_path(@config.data_dir)
@@ -175,16 +178,16 @@ module LazyAlbum
 
       attr_reader :base_path, :entry_path
 
-      # @base_path ˆÈ‰º‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğŒŸõ‚µAƒGƒ“ƒgƒŠ‚ğ’Ç‰Á‚·‚éB
-      # ©g‚ğ•Ô‚·B
+      # @base_path ä»¥ä¸‹ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æ¤œç´¢ã—ã€ã‚¨ãƒ³ãƒˆãƒªã‚’è¿½åŠ ã™ã‚‹ã€‚
+      # è‡ªèº«ã‚’è¿”ã™ã€‚
       def serch
-        Dir.glob(File.join(@path, "*")) do |f|
+        Dir.glob(conv_to_filesystem_encoding(File.join(@path, "*"))) do |f|
           next if /^\./ =~ File.basename(f)
-          # ‰æ‘œƒtƒ@ƒCƒ‹‚Ìİ‚éƒfƒBƒŒƒNƒgƒŠ‚ğ‘ÎÛ‚Æ‚·‚éB
+          # ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«ã®åœ¨ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å¯¾è±¡ã¨ã™ã‚‹ã€‚
 #          if File.directory?(f) and LazyAlbum.picture_exist?(f)
           if File.directory?(f)
-            entry = LazyAlbum::Entry.new(File.join(@entry_path, File.basename(f)))
-            # ‚à‚µƒf[ƒ^ƒtƒ@ƒCƒ‹‚ªİ‚ê‚ÎC‚»‚ê‚ğ“Ç‚İ‚ŞB
+            entry = LazyAlbum::Entry.new(File.join(@entry_path, conv_from_filesystem_encoding(File.basename(f))))
+            # ã‚‚ã—ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ãŒåœ¨ã‚Œã°ï¼Œãã‚Œã‚’èª­ã¿è¾¼ã‚€ã€‚
             entry.read if LazyAlbum.datafile_exist?(f)
             @entries << entry
           end
@@ -192,11 +195,11 @@ module LazyAlbum
         self
       end
 
-      # entryiLazyAlbum::EntryƒIƒuƒWƒFƒNƒgj‚ğ’Ç‰Á‚·‚éB
+      # entryï¼ˆLazyAlbum::Entryã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰ã‚’è¿½åŠ ã™ã‚‹ã€‚
       def add(entry); @entries << entry; end
       alias :<< :add
 
-      # ŠeƒGƒ“ƒgƒŠ‚É‘Î‚µ‚ÄƒuƒƒbƒN‚ğŒJ‚è•Ô‚·ƒCƒeƒŒ[ƒ^B
+      # å„ã‚¨ãƒ³ãƒˆãƒªã«å¯¾ã—ã¦ãƒ–ãƒ­ãƒƒã‚¯ã‚’ç¹°ã‚Šè¿”ã™ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã€‚
       def each(&block)
         @entries.each do |entry|
           yield(entry) if block_given?
@@ -212,7 +215,7 @@ module LazyAlbum
         end
       end
 
-      # ƒGƒ“ƒgƒŠ‚ª‚È‚¯‚ê‚Î^‚ğ•Ô‚·B
+      # ã‚¨ãƒ³ãƒˆãƒªãŒãªã‘ã‚Œã°çœŸã‚’è¿”ã™ã€‚
       def empty?
         @entries.empty?
       end

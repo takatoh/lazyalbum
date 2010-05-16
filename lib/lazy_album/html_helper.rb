@@ -15,15 +15,15 @@ module LazyAlbum
     end
 
     def url_to_picture_page(entry_path, picture)
-      "/#{CGI.escape(entry_path)}/#{CGI.escape(picture)}"
+      "#{url_to_entry(entry_path)}/#{CGI.escape(picture)}"
     end
 
     def url_to_picture(entry_path, picture)
-      "/images/#{CGI.escape(entry_path)}/#{CGI.escape(picture)}"
+      "/images#{url_to_entry(entry_path)}/#{CGI.escape(picture)}"
     end
 
     def url_to_thumbnail(entry_path, picture)
-      "/images/#{CGI.escape(entry_path)}/#{CGI.escape(picture)}.thumbnail"
+      "/images#{url_to_entry(entry_path)}/#{CGI.escape(picture)}.thumbnail"
     end
 
     def breadcrumbs(entry_path)
