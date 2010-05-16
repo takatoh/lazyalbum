@@ -8,6 +8,8 @@ require 'yaml'
 require 'rubygems'
 require 'rmagick'
 
+require 'lazy_album/utils'
+
 module LazyAlbum
 
     # 画像として扱うファイルの拡張子の配列。
@@ -89,6 +91,8 @@ module LazyAlbum
 
     class Entry
 
+      include LazyAlbum::Utils
+
       # LazyAlbum::Entryオブジェクトを生成する。
       def initialize(entry_path)
         @config = Config.instance
@@ -161,6 +165,8 @@ module LazyAlbum
 
     class Entries
 
+      include LazyAlbum::Utils
+
       # LazyAlbum::Entriesオブジェクトを生成する。@base_path 以外は空。
       def initialize(entry_path = "")
         @config = Config.instance
@@ -175,12 +181,12 @@ module LazyAlbum
       # @base_path 以下のディレクトリを検索し、エントリを追加する。
       # 自身を返す。
       def serch
-        Dir.glob(File.join(@path, "*")) do |f|
+        Dir.glob(conv_to_filesystem_encoding(File.join(@path, "*"))) do |f|
           next if /^\./ =~ File.basename(f)
           # 画像ファイルの在るディレクトリを対象とする。
 #          if File.directory?(f) and LazyAlbum.picture_exist?(f)
           if File.directory?(f)
-            entry = LazyAlbum::Entry.new(File.join(@entry_path, File.basename(f)))
+            entry = LazyAlbum::Entry.new(File.join(@entry_path, conv_from_filesystem_encoding(File.basename(f))))
             # もしデータファイルが在れば，それを読み込む。
             entry.read if LazyAlbum.datafile_exist?(f)
             @entries << entry
