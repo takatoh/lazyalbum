@@ -63,7 +63,7 @@ class LazyAlbumApp < Sinatra::Base
   # Picture
   get '/*' do
     @config = LazyAlbum::Config.instance
-    pathes = (params[:splat][0]).split("/")
+    pathes = params[:splat][0].split("/")
     @picture = pathes[-1]
     pass unless LazyAlbum.picture?(@picture)
     @entry = pathes[0..-2].join("/")

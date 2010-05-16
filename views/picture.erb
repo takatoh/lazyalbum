@@ -15,7 +15,7 @@
   <div class="pageheader"><%= breadcrumbs(@entry) %></h2></div>
   <div class="pagebody">
     <h3>Picture: <%= @picture %></h3>
-    <img id="main_picture" src="/images/<%= @entry %>/<%= @picture %>">
+    <img id="main_picture" src="<%= url_to_picture(@entry, @picture) %>">
   </div>
 
 </body>
