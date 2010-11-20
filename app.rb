@@ -13,15 +13,6 @@ require 'lazy_album'
 
 class LazyAlbumApp < Sinatra::Base
 
-  helpers do
-    include Rack::Utils
-    alias_method :h, :escape_html
-    include LazyAlbum::Utils
-  end
-
-  include LazyAlbum::HTMLHelper
-
-
   set :run, true
 
   enable :static
@@ -29,10 +20,15 @@ class LazyAlbumApp < Sinatra::Base
   enable :methodoverride
   enable :sessions
 
+  helpers do
+    include Rack::Utils
+    alias_method :h, :escape_html
+    include LazyAlbum::Utils
+    include LazyAlbum::HTMLHelper
 
-  ## Methods
-  def odd_or_even(n)
-    ["even", "odd"][n % 2]
+    def odd_or_even(n)
+      ["even", "odd"][n % 2]
+    end
   end
 
 
@@ -41,8 +37,7 @@ class LazyAlbumApp < Sinatra::Base
     @config = LazyAlbum::Config.instance
     @page_title = @config.page_title
     @ents = LazyAlbum::Entries.new.serch
-    @items = @ents.to_array
-    @items.sort!{|a, b| a[:title] <=> b[:title] }
+    @items = @ents.to_array.sort!{|a, b| a[:title] <=> b[:title] }
     erb :index
   end
 
@@ -86,8 +81,7 @@ class LazyAlbumApp < Sinatra::Base
     @items = @ent.pictures
 
     @ent.search
-    @sub_entries = @ent.sub_entries.to_array
-    @sub_entries.sort!{|a, b| a[:title] <=> b[:title] }
+    @sub_entries = @ent.sub_entries.to_array.sort!{|a, b| a[:title] <=> b[:title] }
     @ent.make_thumbnail_all
 
     erb :entry
