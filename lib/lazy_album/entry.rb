@@ -4,7 +4,6 @@
 
 require 'find'
 require 'yaml'
-require 'rmagick'
 
 require 'lazy_album/utils'
 
@@ -148,12 +147,8 @@ module LazyAlbum
         pictures.each do |pic|
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
-            geometry = Magick::Geometry.from_s("150x150")
-            img = Magick::Image.read("#{conv_to_filesystem_encoding(@path)}/#{pic}").first
-            thumbnail = img.change_geometry(geometry) do |cols, rows, i|
-              i.resize!(cols, rows)
-            end
-            thumbnail.write(thumb)
+            geometry "150x150"
+            system("convert -thumbnail #{geometry} #{pic} #{thumb}")
           end
         end
       end
