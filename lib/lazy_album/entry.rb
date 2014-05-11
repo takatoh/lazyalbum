@@ -149,7 +149,7 @@ module LazyAlbum
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
             geometry = "150x150"
-            system("convert -thumbnail #{geometry} #{pic} #{thumb}")
+            system("convert -thumbnail #{geometry} #{File.join(@path, pic)} #{thumb}")
           end
         end
       end
