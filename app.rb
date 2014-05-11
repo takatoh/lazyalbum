@@ -17,7 +17,7 @@ class LazyAlbumApp < Sinatra::Base
   set :run, true
 
   enable :static
-  set :public, File.dirname(__FILE__) + "/public"
+  set :public_dir, File.dirname(__FILE__) + "/public"
   enable :methodoverride
   enable :sessions
 
