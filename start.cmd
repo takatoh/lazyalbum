@@ -1,1 +1,1 @@
-rackup app.ru
+rackup config.ru

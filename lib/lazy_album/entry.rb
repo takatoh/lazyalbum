@@ -1,12 +1,10 @@
+# coding: utf-8
 #
 # LazyAlbum の画像ディレクトリを扱うためのライブラリ。
 #
 
 require 'find'
-require 'jcode'
 require 'yaml'
-require 'rubygems'
-require 'rmagick'
 
 require 'lazy_album/utils'
 
@@ -31,7 +29,7 @@ module LazyAlbum
     def picture?(file)
       x = false
 #      if File.file?(file)
-        ext = /\.[^\.]*$/is.match(file).to_s.downcase
+        ext = /\.[^\.]*$/i.match(file).to_s.downcase
         x = PICTURE_EXT.member?(ext)
 #      end
       x
@@ -150,12 +148,10 @@ module LazyAlbum
         pictures.each do |pic|
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
-            geometry = Magick::Geometry.from_s("150x150")
-            img = Magick::Image.read("#{conv_to_filesystem_encoding(@path)}/#{pic}").first
-            thumbnail = img.change_geometry(geometry) do |cols, rows, i|
-              i.resize!(cols, rows)
-            end
-            thumbnail.write(thumb)
+            geometry = "150x150"
+            pic_file = conv_to_filesystem_encoding(File.join(@path, pic))
+            thumb_file = conv_to_filesystem_encoding(thumb)
+            system("convert -thumbnail #{geometry} #{pic_file} #{thumb_file}")
           end
         end
       end

@@ -1,7 +1,6 @@
+# coding: utf-8
 #
 # inputfileparser.rb
-#
-# $Id: inputfileparser.rb 20 2008-09-12 04:59:40Z 24711 $
 #
 
     class InputFileError < StandardError; end

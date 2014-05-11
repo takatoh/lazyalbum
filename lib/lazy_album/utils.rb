@@ -1,9 +1,9 @@
+# coding: utf-8
 #
 # LazyAlbum::Utils
 #
 
 require 'yaml'
-require 'iconv'
 require 'lazy_album/config'
 
 
@@ -17,7 +17,7 @@ module LazyAlbum
       if /UTF-8/i =~ @@config.file_system_encoding
         str
       else
-        Iconv.iconv(@@config.file_system_encoding, "UTF-8", str)[0]
+        str.encode(@@config.file_system_encoding)
       end
     end
     module_function :conv_to_filesystem_encoding
@@ -26,7 +26,7 @@ module LazyAlbum
       if /UTF-8/i =~ @@config.file_system_encoding
         str
       else
-        Iconv.iconv("UTF-8", @@config.file_system_encoding, str)[0]
+        str.encode("UTF-8")
       end
     end
     module_function :conv_from_filesystem_encoding
