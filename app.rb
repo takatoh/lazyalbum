@@ -3,7 +3,6 @@
 #
 
 
-require 'rubygems'
 require 'sinatra/base'
 require 'erb'
 

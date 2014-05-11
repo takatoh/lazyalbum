@@ -3,9 +3,7 @@
 #
 
 require 'find'
-require 'jcode'
 require 'yaml'
-require 'rubygems'
 require 'rmagick'
 
 require 'lazy_album/utils'
