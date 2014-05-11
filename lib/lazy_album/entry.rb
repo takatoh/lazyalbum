@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 # LazyAlbum の画像ディレクトリを扱うためのライブラリ。
 #
@@ -147,7 +148,7 @@ module LazyAlbum
         pictures.each do |pic|
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
-            geometry "150x150"
+            geometry = "150x150"
             system("convert -thumbnail #{geometry} #{pic} #{thumb}")
           end
         end
