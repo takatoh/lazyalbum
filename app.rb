@@ -3,6 +3,7 @@
 #  LazyAlbum Web App.
 #
 
+Encoding.default_external = 'utf-8'
 
 require 'sinatra/base'
 require 'erb'

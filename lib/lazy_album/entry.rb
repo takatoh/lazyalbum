@@ -29,7 +29,7 @@ module LazyAlbum
     def picture?(file)
       x = false
 #      if File.file?(file)
-        ext = /\.[^\.]*$/is.match(file).to_s.downcase
+        ext = /\.[^\.]*$/i.match(file).to_s.downcase
         x = PICTURE_EXT.member?(ext)
 #      end
       x
@@ -149,7 +149,9 @@ module LazyAlbum
           thumb = File.join(thumb_dir, "tn_#{pic}")
           unless File.exists?(thumb)
             geometry = "150x150"
-            system("convert -thumbnail #{geometry} #{File.join(@path, pic)} #{thumb}")
+            pic_file = conv_to_filesystem_encoding(File.join(@path, pic))
+            thumb_file = conv_to_filesystem_encoding(thumb)
+            system("convert -thumbnail #{geometry} #{pic_file} #{thumb_file}")
           end
         end
       end
