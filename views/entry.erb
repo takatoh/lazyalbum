@@ -7,6 +7,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Index of <%= @title %></title>
   <% if @config.stylesheet %><link rel="stylesheet" type="text/css" href="/css/<%= @config.stylesheet %>"><% end %>
+  <link media="screen" rel="stylesheet" type="text/css" href="/js/colorbox/colorbox.css" />
+  <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("a[class='colorbox']").colorbox()
+    })</script>
 </head>
 
 <body>
@@ -30,7 +37,7 @@
   <ul class="photoList">
   <% @items.each do |i| %>
   <li class="photoBox">
-    <a href="<%= url_to_picture_page(@entry, i) %>">
+    <a href="<%= url_to_picture(@entry, i) %>" class="colorbox" title="<%= i %>">
       <img src="<%= url_to_thumbnail(@entry, i) %>">
     </a><br/>
     <%= i %>
