@@ -12,7 +12,7 @@
   <script type="text/javascript" src="/js/colorbox/jquery.colorbox-min.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
-      $("a[class='colorbox']").colorbox()
+      $("a[rel='colorbox']").colorbox()
     })</script>
 </head>
 
@@ -37,7 +37,7 @@
   <ul class="photoList">
   <% @items.each do |i| %>
   <li class="photoBox">
-    <a href="<%= url_to_picture(@entry, i) %>" class="colorbox" title="<%= i %>">
+    <a href="<%= url_to_picture(@entry, i) %>" rel="colorbox" title="<%= i %>">
       <img src="<%= url_to_thumbnail(@entry, i) %>">
     </a><br/>
     <%= i %>
