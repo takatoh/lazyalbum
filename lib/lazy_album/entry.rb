@@ -146,7 +146,7 @@ module LazyAlbum
         thumb_dir = conv_to_filesystem_encoding(File.join(@path, THUMB_DIR_NAME))
         make_thumb_dir unless File.exist?(thumb_dir)
         pictures.each do |pic|
-          thumb = File.join(thumb_dir, "tn_#{pic}")
+          thumb = File.join(thumb_dir, "tn_#{pic}".sub(File.extname(pic), '.jpg'))
           unless File.exists?(thumb)
             geometry = "150x150"
             pic_file = conv_to_filesystem_encoding(File.join(@path, pic))
